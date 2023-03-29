@@ -79,20 +79,6 @@ duck_greetings = {
         "You've found the end of the rainbow, now let's code some gold together! Happy St. Patrick's Day!",
         "Happy St. Patrick's Day! Let your code take flight like a duck soaring over fields of green!"
     ],
-    Holiday.EASTER_MONDAY: [
-        "Happy Easter Monday! Time to hatch new ideas and let your code take flight like a duckling!",
-        "Welcome back! Let's make a splash with some egg-citing new code this Easter Monday!",
-        "Easter Monday blessings! Let's write code that spreads joy and hope, like a duck heralding the arrival of spring!"
-    ],
-    Holiday.LABOUR_DAY: [
-        "Welcome back! Let's celebrate the fruits of our labour with some quack-tastic code this Labour Day!",
-        "Labour Day greetings! Today, let's code in honor of hard work and dedication, just like a diligent duck!"
-    ],
-    Holiday.THANKSGIVING: [
-        "Happy Thanksgiving! Let's give thanks for the code that keeps our digital world afloat, like a duck on water.",
-        "Welcome back! Let's share our gratitude for the code that brings us together, just like a Thanksgiving feast!",
-        "On Thanksgiving, let's cherish the code that has connected us and made our lives better, like a duck and its family."       
-    ],
     Holiday.HALLOWEEN: [
         "Happy Halloween! Don't let your code get spooked, debug it like a duck hunting for treats!",
         "Trick or treat? Let's code some wickedly good software this Halloween and quack up the night!",

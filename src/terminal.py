@@ -38,15 +38,35 @@ cmds = {
 }
 
 def print_greeting():
-    isnewyears = (datetime.datetime().day == "01" and datetime.datetime().month == "01")
-    ischristmas = (datetime.datetime().day == "25" and datetime.datetime().month == "12")
-    isnewyears = (datetime.datetime().day == "01" and datetime.datetime().month == "01")
+    today = datetime.date.today()
+    isnewyears = (today.day == "01" and today.month == "01")
+    ischristmas = (today.day == "25" and today.month == "12")
+    isvalentines = (today.day == "14" and today.month == "02")
+    ishalloween = (today.day == "31" and today.month == "10")
+    isstpd = (today.day == "17" and today.month == "3")
+    isremberanceday = (today.day == "11" and today.month == "11")
+    isboxingday = (today.day == "26" and today.month == "12")
     print(f"PyCon {ver}, includes {len(cmds)} commands")
     print(f"on {distro.name()} version {distro.version()}")
     print(f"using Python {platform.python_version()} build {platform.python_build()}")
     print(f"branch {platform.python_branch()} with compiler {platform.python_compiler()}.")
     print("")
-    print()
+    if isnewyears:
+        print(random.choice(duck_greetings[1]))
+    elif ischristmas:
+        print(random.choice(duck_greetings[6]))
+    elif isvalentines:
+        print(random.choice(duck_greetings[2]))
+    elif ishalloween:
+        print(random.choice(duck_greetings[4]))
+    elif isstpd:
+        print(random.choice(duck_greetings[3]))
+    elif isremberanceday:
+        print(random.choice(duck_greetings[5]))
+    elif isboxingday:
+        print(random.choice(duck_greetings[7]))
+    else:
+        print(random.choice(greetings))
 
 # Define a function to parse and execute user input
 def process_input(input_str: str):
@@ -64,6 +84,7 @@ def process_input(input_str: str):
         print(f"Unknown command: {command}")
 
 # Main loop to read and process user input
+print_greeting()
 while True:
     try:
         color(text = "bright white" , bg = "blue" , delay = 0.67 ,repeat = -1 , dict = {})
