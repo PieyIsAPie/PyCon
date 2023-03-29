@@ -2,6 +2,7 @@ import os
 import platform
 from pathlib import Path
 import configparser
+from enum import Enum
 
 DEFAULTCONFIG = """
 [Settings.Color]
@@ -46,8 +47,6 @@ def loadcfg():
     return cfg
 
 cfg = loadcfg()
-
-from enum import Enum
 
 class Holiday(Enum):
     NEW_YEARS_DAY = "New Year's Day"
