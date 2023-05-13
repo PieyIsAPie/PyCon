@@ -5,10 +5,14 @@ import os
 import socket, urllib.request
 from globals import *
 import base64
+import ftplib
+import tqdm
+from getpass import getpass
 #engines
 import pyttsx3
 import openai
 import py_mini_racer
+import colorama
 
 ctx = py_mini_racer.MiniRacer()
 
@@ -133,7 +137,9 @@ def speak(*args):
     engine.runAndWait()
 
 def hget(url, out):
-    urllib.request.urlretrieve(url, out)
+    filename = url.split('/')[-1]
+    with tqdm(unit = 'B', unit_scale = True, unit_divisor = 1024, miniters = 1, desc = filename) as t:
+        urllib.request.urlretrieve(url, filename = os.path.join(out, filename), reporthook = uh(t), data = None)
 
 def setsetting(setting: str, value):
     category = setting.split('.')[1]
@@ -199,3 +205,101 @@ def dec(type, *value: str):
         print(base64.urlsafe_b64decode(value[0]).decode())
     if type == "stdb64":
         print(base64.standard_b64decode(value[0]).decode())
+
+def ftp(ip, port, passive=True):
+    port = int(port)
+    passive = bool(passive)
+    user = input("Username: ")
+    password = getpass()
+    if ftplib.FTP.voidcmd('FEAT') == "AUTH TLS" or "AUTH SSL":
+        print("This server is TLS!")
+        ftp = ftplib.FTP_TLS(ip)
+    else:
+        ftp = ftplib.FTP(ip)
+    ftp.login(user, password)
+    ftp.set_pasv(passive)
+
+    while True:
+        command = input("PyCon - (FTP )")
+        cmd = command.split(" ")[0]
+        args = command.split(" ")[1:]
+        if cmd == "list":
+            try:
+                files = ftp.nlst()
+                print(files)
+            except ftplib.error_perm as resp:
+                if str(resp) == "550 No files found":
+                    print("No files in this directory")
+                else:
+                    raise
+        elif cmd == "get":
+            with open(args[0], 'wb') as fd:
+                total = ftp.size(args[0])
+
+                with tqdm.tqdm(total=total) as pbar:
+                    def callback_(data):
+                        pbar.update(len(data))
+                        fd.write(data)
+
+                    ftp.retrbinary('RETR {}'.format(args[0]), callback_)
+        elif cmd == "post":
+            with open(args[0], 'wb') as fd:
+                total = len(fd.read())
+
+                with tqdm.tqdm(total=total) as pbar:
+                    def callback_(data):
+                        pbar.update(len(data))
+
+                    ftp.storbinary('STOR {}'.format(args[0]), callback=callback_)
+def diff(file1, file2):
+    if hashlib.sha256(open(file1, "r").read().encode()).hexdigest() == hashlib.sha256(open(file2, "r").read().encode()).hexdigest():
+        sha256 = True
+    elif hashlib.sha256(open(file1, "r").read().encode()).hexdigest() != hashlib.sha256(open(file2, "r").read().encode()).hexdigest():
+        sha256 = False
+    if hashlib.sha512(open(file1, "r").read().encode()).hexdigest() == hashlib.sha512(open(file2, "r").read().encode()).hexdigest():
+        sha512 = True
+    elif hashlib.sha512(open(file1, "r").read().encode()).hexdigest() != hashlib.sha512(open(file2, "r").read().encode()).hexdigest():
+        sha512 = False
+    if hashlib.sha1(open(file1, "r").read().encode()).hexdigest() == hashlib.sha1(open(file2, "r").read().encode()).hexdigest():
+        sha1 = True
+    elif hashlib.sha1(open(file1, "r").read().encode()).hexdigest() != hashlib.sha1(open(file2, "r").read().encode()).hexdigest():
+        sha1 = False
+    if hashlib.sha384(open(file1, "r").read().encode()).hexdigest() == hashlib.sha384(open(file2, "r").read().encode()).hexdigest():
+        sha384 = True
+    elif hashlib.sha384(open(file1, "r").read().encode()).hexdigest() != hashlib.sha384(open(file2, "r").read().encode()).hexdigest():
+        sha384 = False
+    if hashlib.md5(open(file1, "r").read().encode()).hexdigest() == hashlib.md5(open(file2, "r").read().encode()).hexdigest():
+        md5 = True
+    elif hashlib.md5(open(file1, "r").read().encode()).hexdigest() != hashlib.md5(open(file2, "r").read().encode()).hexdigest():
+        md5 = False
+    if open(file1, "r").read() == open(file2, "r").read():
+        m = True
+    elif open(file1, "r").read() != open(file2, "r").read():
+        m = False
+    
+    if sha256 == True:
+        print("SHA256 test " + colorama.Fore.GREEN + "SUCCESS" + colorama.Style.RESET_ALL)
+    elif sha256 == False:
+        print("SHA256 test " + colorama.Fore.RED + "FAILED" + colorama.Style.RESET_ALL)
+    if sha512 == True:
+        print("SHA512 test " + colorama.Fore.GREEN + "SUCCESS" + colorama.Style.RESET_ALL)
+    elif sha512 == False:
+        print("SHA512 test " + colorama.Fore.RED + "FAILED" + colorama.Style.RESET_ALL)
+    if sha1 == True:
+        print("SHA1 test " + colorama.Fore.GREEN + "SUCCESS" + colorama.Style.RESET_ALL)
+    elif sha1 == False:
+        print("SHA1 test " + colorama.Fore.RED + "FAILED" + colorama.Style.RESET_ALL)
+    if sha384 == True:
+        print("SHA384 test " + colorama.Fore.GREEN + "SUCCESS" + colorama.Style.RESET_ALL)
+    elif sha384 == False:
+        print("SHA384 test " + colorama.Fore.RED + "FAILED" + colorama.Style.RESET_ALL)
+    if md5 == True:
+        print("MD5 test " + colorama.Fore.GREEN + "SUCCESS" + colorama.Style.RESET_ALL)
+    elif md5 == False:
+        print("MD5 test " + colorama.Fore.RED + "FAILED" + colorama.Style.RESET_ALL)
+    if m == True:
+        print("File contents test " + colorama.Fore.GREEN + "SUCCESS" + colorama.Style.RESET_ALL)
+    elif m == False:
+        print("File contents test " + colorama.Fore.RED + "FAILED" + colorama.Style.RESET_ALL)
+
+    

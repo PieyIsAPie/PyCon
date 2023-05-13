@@ -1,7 +1,10 @@
-Color-Console
 pyinstaller
 openai
 pyperclip
 distro
 pyttsx3
 py_mini_racer
+pycryptodome
+tqdm
+psutil
+colorama

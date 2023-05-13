@@ -1,3 +1,4 @@
+"Crap that is used in other libs and stuff that doesn't belong anywhere else."
 import os
 import platform
 from pathlib import Path
@@ -5,10 +6,6 @@ import configparser
 from enum import Enum
 
 DEFAULTCONFIG = """
-[Settings.Color]
-Back=Blue
-Fore=BrightWhite
-
 [Settings.OpenAI-AskGPT]
 API_KEY=
 model=text-davinci-003
@@ -99,3 +96,31 @@ duck_greetings = {
         "Boxing Day greetings! Dive into the spirit of giving and let's share our code with the world, like a duck spreading joy."
     ]
 }
+
+def uh(t):
+    """Wraps tqdm instance.
+    Don't forget to close() or __exit__()
+    the tqdm instance once you're done with it (easiest using `with` syntax).
+    Example
+    -------
+    >>> with tqdm(...) as t:
+    ...     reporthook = my_hook(t)
+    ...     urllib.urlretrieve(..., reporthook=reporthook)
+    """
+    last_b = [0]
+
+    def update_to(b=1, bsize=1, tsize=None):
+        """
+        b  : int, optional
+            Number of blocks transferred so far [default: 1].
+        bsize  : int, optional
+            Size of each block (in tqdm units) [default: 1].
+        tsize  : int, optional
+            Total size (in tqdm units). If [default: None] remains unchanged.
+        """
+        if tsize is not None:
+            t.total = tsize
+        t.update((b - last_b[0]) * bsize)
+        last_b[0] = b
+
+    return update_to

@@ -1,10 +1,12 @@
 import sys
 import argparse
 from functions import *
-from Color_Console import *
 from globals import *
 import pyperclip
 import distro, platform, random, datetime
+import colorama
+
+colorama.init()
 
 ver = "v1.0"
 greetings = ["Do I smell ravioli?", "Duck duck goose!", "G'day mate!", "Pizza?", "Let's watch some TV!"]
@@ -34,7 +36,9 @@ cmds = {
     "settings": settings,
     "jss": jss,
     "dec": dec,
-    "enc": enc
+    "enc": enc,
+    "fetch": hget,
+    "diff": diff
 }
 
 def print_greeting():
@@ -46,7 +50,7 @@ def print_greeting():
     isstpd = (today.day == "17" and today.month == "3")
     isremberanceday = (today.day == "11" and today.month == "11")
     isboxingday = (today.day == "26" and today.month == "12")
-    print(f"PyCon {ver}, includes {len(cmds)} commands")
+    print(f"PyCon {ver}, including {len(cmds)} commands")
     print(f"on {distro.name()} version {distro.version()}")
     print(f"using Python {platform.python_version()} build {platform.python_build()}")
     print(f"branch {platform.python_branch()} with compiler {platform.python_compiler()}.")
@@ -87,7 +91,6 @@ def process_input(input_str: str):
 print_greeting()
 while True:
     try:
-        color(text = "bright white" , bg = "blue" , delay = 0.67 ,repeat = -1 , dict = {})
         input_str = input(f"PyCon - {os.getcwd()}> ")  # Prompt user for input
         process_input(input_str)
     except KeyboardInterrupt:  # Handle Ctrl+C
